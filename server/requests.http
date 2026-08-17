@@ -9,6 +9,16 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "priya@test.com",
+  "password": "password123"
+}
+
+###
+
 POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
@@ -81,3 +91,55 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmO
 
 GET http://localhost:5000/api/groups/6a81f29084f55fca1ba4d3e5/settle-up
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmOGMyMWEyZjRjNTIxZGM4ZSIsImlhdCI6MTc4Njg4ODEzNywiZXhwIjoxNzg3NDkyOTM3fQ.E3cDupR80ucUS7qGIfnKR8p78zlTNk1YSF2fv7W_Nqc
+
+
+###
+POST http://localhost:5000/api/expenses/test-upload
+Content-Type: multipart/form-data; boundary=boundary123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmOGMyMWEyZjRjNTIxZGM4ZSIsImlhdCI6MTc4Njg4ODEzNywiZXhwIjoxNzg3NDkyOTM3fQ.E3cDupR80ucUS7qGIfnKR8p78zlTNk1YSF2fv7W_Nqc
+
+--boundary123
+Content-Disposition: form-data; name="receipt"; filename="receipt.png"
+Content-Type: image/png
+
+< C:\Users\hp\OneDrive\Pictures\Screenshots\Screenshot 2026-08-17 125508.png
+--boundary123--
+
+###
+POST http://localhost:5000/api/expenses/test-receipt
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmOGMyMWEyZjRjNTIxZGM4ZSIsImlhdCI6MTc4Njg4ODEzNywiZXhwIjoxNzg3NDkyOTM3fQ.E3cDupR80ucUS7qGIfnKR8p78zlTNk1YSF2fv7W_Nqc
+
+{
+  "imageUrl": "https://res.cloudinary.com/aaeupfws/image/upload/v1786951709/ywaxq8llrifcrfmkklzm.png"
+}
+
+###
+
+POST http://localhost:5000/api/groups/6a81f29084f55fca1ba4d3e5/settlements
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmOGMyMWEyZjRjNTIxZGM4ZSIsImlhdCI6MTc4Njg4ODEzNywiZXhwIjoxNzg3NDkyOTM3fQ.E3cDupR80ucUS7qGIfnKR8p78zlTNk1YSF2fv7W_Nqc
+
+{
+  "to": "6a80ab9f8c21a2f4c521dc8e",
+  "amount": 20
+}
+
+###
+
+GET http://localhost:5000/api/groups/6a81f29084f55fca1ba4d3e5/balances
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODBhYjlmOGMyMWEyZjRjNTIxZGM4ZSIsImlhdCI6MTc4Njg4ODEzNywiZXhwIjoxNzg3NDkyOTM3fQ.E3cDupR80ucUS7qGIfnKR8p78zlTNk1YSF2fv7W_Nqc
+
+###
+POST http://localhost:5000/api/groups/6a81f29084f55fca1ba4d3e5/settlements
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODFjOGEyMmMxZGFhYTA2ZTUxZGZmOCIsImlhdCI6MTc4Njk3MzIyOCwiZXhwIjoxNzg3NTc4MDI4fQ.hx7BuVx8tAynWHCgKGZQO1zNt73QRR_KvlCCSKXdwcs
+
+{
+  "to": "6a80ab9f8c21a2f4c521dc8e",
+  "amount": 20
+}
+
+###
+GET http://localhost:5000/api/groups/6a81f29084f55fca1ba4d3e5/balances
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhODFjOGEyMmMxZGFhYTA2ZTUxZGZmOCIsImlhdCI6MTc4Njk3MzIyOCwiZXhwIjoxNzg3NTc4MDI4fQ.hx7BuVx8tAynWHCgKGZQO1zNt73QRR_KvlCCSKXdwcs
