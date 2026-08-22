@@ -7,6 +7,7 @@ const upload = require('../middleware/upload');
 const uploadToCloudinary = require('../utils/uploadToCloudinary');
 const readReceipt = require('../utils/readReceipt');
 const { convertCurrency } = require('../utils/currency');
+const { sendExpenseEmail } = require('../utils/mailer');
 
 // Create a new expense inside a group
 router.post('/', protect, async (req, res) => {
@@ -47,6 +48,24 @@ router.post('/', protect, async (req, res) => {
       originalCurrency,
       paidBy, splitBetween, group: groupId, isRecurring, recurrenceInterval, nextRecurrenceDate
     });
+
+    // Fire emails to all group members except the person who added the expense
+    const populatedGroup = await Group.findById(groupId).populate('members', 'name email');
+    console.log('📧 Group members:', populatedGroup.members.map(m => m.email));
+    console.log('📧 Sending to members (excluding creator):', 
+      populatedGroup.members.filter(m => m._id.toString() !== req.userId).map(m => m.email)
+    );
+    console.log('📧 EMAIL_USER loaded:', !!process.env.EMAIL_USER);
+    
+    const emailPromises = populatedGroup.members
+      .filter((m) => m._id.toString() !== req.userId)
+      .map((m) => sendExpenseEmail(
+        m.email,
+        'New Expense Added',
+        `${description} — ${finalAmount} ${baseCurrency} was added to your group.`
+      ));
+    await Promise.allSettled(emailPromises);
+    console.log('📧 Email promises settled');
 
     res.status(201).json(newExpense);
   } catch (err) {

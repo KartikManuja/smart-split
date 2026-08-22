@@ -2,11 +2,37 @@
 const express = require('express');
 const router = express.Router();
 const Group = require('../models/Group');
+const User = require('../models/User');
 const protect = require('../middleware/auth');
 const Expense = require('../models/Expense');
 const simplifyDebts = require('../utils/simplifyDebts');
 const Settlement = require('../models/Settlement');
- 
+
+// Add a member to a group by email
+router.post('/:groupId/members', protect, async (req, res) => {
+  try {
+    const { email } = req.body;
+    const group = await Group.findById(req.params.groupId);
+    if (!group) return res.status(404).json({ error: 'Group not found' });
+
+    const isMember = group.members.some((m) => m.toString() === req.userId);
+    if (!isMember) return res.status(403).json({ error: 'You are not a member of this group' });
+
+    const userToAdd = await User.findOne({ email });
+    if (!userToAdd) return res.status(404).json({ error: 'No user found with that email' });
+
+    if (group.members.some((m) => m.toString() === userToAdd._id.toString())) {
+      return res.status(400).json({ error: 'Already a member' });
+    }
+
+    group.members.push(userToAdd._id);
+    await group.save();
+    res.json(group);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Create a group
 router.post('/', protect, async (req, res) => {
   try {

@@ -9,6 +9,7 @@ function GroupDetail() {
   const [balances, setBalances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [memberEmail, setMemberEmail] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -41,6 +42,17 @@ function GroupDetail() {
     }
   };
 
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post(`/groups/${groupId}/members`, { email: memberEmail });
+      setMemberEmail('');
+      fetchData();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Could not add member');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-ink flex items-center justify-center">
@@ -56,7 +68,20 @@ function GroupDetail() {
           ← Back to groups
         </Link>
 
-        <h1 className="font-display text-2xl font-semibold text-text mt-3 mb-6">{group?.name || 'Group Detail'}</h1>
+        <h1 className="font-display text-2xl font-semibold text-text mt-3 mb-4">{group?.name || 'Group Detail'}</h1>
+
+        <form onSubmit={handleAddMember} className="flex gap-2 mb-6">
+          <input
+            type="email"
+            placeholder="Add member by email"
+            value={memberEmail}
+            onChange={(e) => setMemberEmail(e.target.value)}
+            className="flex-1 bg-surface-2 border border-line rounded-md px-3 py-2 text-text placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+          />
+          <button type="submit" className="bg-accent hover:bg-accent-soft text-ink font-mono text-xs uppercase tracking-wide px-4 rounded-md">
+            Add
+          </button>
+        </form>
 
         <Link
   to={`/groups/${groupId}/add-expense`}
