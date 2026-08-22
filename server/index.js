@@ -5,6 +5,7 @@ const cors = require('cors');
 const expenseRoutes = require('./routes/expenses');
 const authRoutes = require('./routes/auth');
 const groupRoutes = require('./routes/groups');
+require('./utils/cronJobs');
 const app = express();
 
 mongoose.connect(process.env.MONGO_URI)

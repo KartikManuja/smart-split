@@ -33,6 +33,19 @@ router.get('/', protect, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Get a single group
+router.get('/:groupId', protect, async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.groupId).populate('members', 'name email');
+    if (!group) return res.status(404).json({ error: 'Group not found' });
+    const isMember = group.members.some(m => m._id.toString() === req.userId);
+    if (!isMember) return res.status(403).json({ error: 'Not a member' });
+    res.json(group);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
  
 router.get('/:groupId/balances', protect, async (req, res) => {
   try {

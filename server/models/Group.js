@@ -5,6 +5,10 @@ const groupSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  baseCurrency: {
+    type: String,
+    default: 'USD'
+  },
   members: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
