@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api'
+  baseURL: 'https://smart-split-1-yiyk.onrender.com/api'
 });
 
 api.interceptors.request.use((config) => {
